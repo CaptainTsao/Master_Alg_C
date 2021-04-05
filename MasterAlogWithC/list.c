@@ -42,7 +42,7 @@ void list_destroy(List *list)
         }
     }
     // No operations are allowed now, but clear the structure as a precaution.
-    memset(list, 0, sizeof(list));
+    memset(list, 0, sizeof(List));
     return;
 }
 
@@ -52,7 +52,7 @@ list_ins_next(List *list, ListElem *element, const void *data)
 {
     ListElem *new_element;
     // allocate storage for the element 
-    if ((new_element == (ListElem *)malloc(sizeof(ListElem))) == NULL) {
+    if ((new_element = (ListElem *)malloc(sizeof(ListElem))) == NULL) {
         return -1;
     }
     // Insert element into list
