@@ -21,44 +21,38 @@
 #include "list.h"
 
 /* Initialize the list */
-void 
-list_init(List *list, void (*destroy)(void *data)) 
-{
+void
+list_init(List *list, void (*destroy)(void *data)) {
     list->size = 0;
     list->destroy = destroy;
     list->head = NULL;
     list->tail = NULL;
-    return;
 }
 
-void list_destroy(List *list) 
-{
+void list_destroy(List *list) {
     void *data;
     while (list_size(list) > 0) {
-        if (list_rem_next(list, NULL, (void **)&data) == 0 && list->destroy != NULL) 
-        {
+        if (list_rem_next(list, NULL, (void **) &data) == 0 && list->destroy != NULL) {
             // Call a user-defined function to free dynamically allocated data.
             list->destroy(data);
         }
     }
     // No operations are allowed now, but clear the structure as a precaution.
     memset(list, 0, sizeof(List));
-    return;
 }
 
 /* insert element into list */
-int 
-list_ins_next(List *list, ListElem *element, const void *data)
-{
+int
+list_ins_next(List *list, ListElem *element, const void *data) {
     ListElem *new_element;
     // allocate storage for the element 
-    if ((new_element = (ListElem *)malloc(sizeof(ListElem))) == NULL) {
+    if ((new_element = (ListElem *) malloc(sizeof(ListElem))) == NULL) {
         return -1;
     }
     // Insert element into list
-    new_element->data = (void *)data;
+    new_element->data = (void *) data;
     if (element == NULL) {
-        /* handle insertio at the head of list */
+        /* handle insertion at the head of list */
         if (list_size(list) == 0) {
             list->tail = new_element;
         }
@@ -77,10 +71,36 @@ list_ins_next(List *list, ListElem *element, const void *data)
     return 0;
 }
 
+int list_ins_prev(List *list, ListElem *element, const void *data) {
+    ListElem *new_element;
+    /* allocate storage for the element */
+    if ((new_element = (ListElem *) malloc(sizeof(ListElem))) == NULL) {
+        return -1;
+    }
+    /* insert element into list */
+    new_element->data = (void *) data;
+    if (element == NULL) {
+        /* handle insertion at the tail of list */
+        if (list_size(list) == 0) {
+            list->head = new_element;
+        }
+        new_element->next = list->tail;
+        list->tail = new_element;
+    } else {
+        /* handle insertion somewhere other than at the tail */
+        if (element->next == NULL) {
+            list->tail = new_element;
+        }
+        new_element->next = element->next;
+        element->next = new_element->next;
+    }
+    /* adjust the size of list to account for the inserted element */
+    list->size++;
+    return 0;
+}
 
-int 
-list_rem_next(List *list, ListElem *element, void **data) 
-{
+int
+list_rem_next(List *list, ListElem *element, void **data) {
     ListElem *old_element;
     /* Do not allow removal from empty list */
     if (list_size(list) == 0) {

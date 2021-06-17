@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  frames.h
+ *       Filename:  traverse.h
  *
  *    Description:  
  *
  *        Version:  1.0
- *        Created:  2021年04月04日 23时39分00秒
+ *        Created:  2021年05月06日 23时36分01秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,14 +15,17 @@
  *
  * =====================================================================================
  */
+#ifndef TRAVERSE_H
+#define TRAVERSE_H
 
-#ifndef FRAMES_H
-#define FRAMES_H
-
+#include "bitree.h"
 #include "list.h"
 
-int alloc_frame(List *frames);
+/* public interface */
+int preorder(const BiTreeNode *node, List *list);
 
-int free_frame(List *frames, int frame_number);
+int inorder(const BiTreeNode *node, List *list);
+
+int postorder(const BiTreeNode *node, List *list);
 
 #endif
